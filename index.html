@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Avatar: A Timeline</title>
+</head>
+<style>
+    loading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 1000;
+        background-color: #04263E;
+    }
+
+    loading img {
+        position: absolute;
+        max-height: 100px;
+        z-index: 0;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        animation: spinclock 20s infinite;
+    }
+
+    @keyframes spinclock {
+        0% {
+            transform: translateX(-50%) translateY(-50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translateX(-50%) translateY(-50%) rotate(360deg);
+        }
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+
+    html {
+        overflow: scroll;
+        overflow-y: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        width: 0px;
+        height: 10px;
+        background: #808080;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #5c5c5c;
+    }
+
+    events {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translateZ(0) scale(1.0, 1.0);
+    }
+
+    event {
+        position: relative;
+        margin: 0;
+        padding: 0;
+    }
+
+    eventTile {
+        position: absolute;
+        z-index: 2;
+        width: 70%;
+        height: 50%;
+        background-color: rgba(0, 0, 0, 0.50);
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    .eventBackground {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        z-index: 0;
+        pointer-events: none;
+        filter: blur(0px);
+    }
+
+    eventTile img {
+        float: left;
+        height: 100%;
+    }
+
+    eventTile .eventName {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 2em;
+        padding-left: 54%;
+    }
+
+    eventTile .eventShortDescription {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 1.25em;
+        padding-left: 54%;
+    }
+
+    eventTile .eventLongDescription {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 1em;
+        padding-left: 54%;
+        padding-right: 4%;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+    #timelineIndicator {
+        background-color: grey;
+        height: 50px;
+        width: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 10px;
+        z-index: 100;
+    }
+
+    #timelineIndicatorText {
+        position: fixed;
+        font-family: Arial, sans-serif;
+        color: grey;
+        bottom: 16px;
+        left: 25px;
+        font-size: 1.6em;
+        margin-bottom: 0;
+        z-index: 100;
+    }
+
+    #particles-js {
+        display: none;
+        pointer-events: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    #timelineLines {
+        position: fixed;
+        bottom: 0px;
+        left: 0;
+    }
+
+</style>
+<body>
+<div id="particles-js"></div>
+<loading><img src="resources/images/generic/loading.png"></loading>
+<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>
+
+<events>
+    <event data-date="9,850 BG — Year of the Dragon">
+        <eventTile style="background-color: rgba(21, 79, 125, 0.91)">
+            <img src="resources/images/tiles/wan.jpg">
+            <p class="eventName">Avatar Wan is Born</p>
+            <p class="eventShortDescription">the first avatar was born</p>
+            <p class="eventLongDescription">Living in poverty, Wan stole to survive and feed his friends. To achieve
+                that goal, he regularly stole from the Chou family. However, one day, after snatching food from them, he
+                was chased down the streets of the city by the three angry Chou brothers. He managed to outrun them at
+                first by making his way across rooftops, though when he stopped to eat, the brothers caught up to him.
+                Wan attempted to escape again, but was tripped by one of the Chou brothers and subsequently captured.
+                His sack of food was taken away from him, and he was thrown into a muddy pen with hybrid pigs. Wan
+                returned to his family's tree house, bringing Jaya and Yao what little food he had managed to salvage in
+                his tunic. He gave away his own portion to several hungry animals, lamenting their impoverished
+                lifestyle and wishing they could live like the Chous. During that time, however, he devised a plan to
+                gain more power so he could change his life.</p>
+        </eventTile>
+        <img class="eventBackground" src="resources/images/backgrounds/lionTurtle.jpg">
+    </event>
+
+    <event data-date="9,830 BG — Year of the Rat">
+        <eventTile style="background-color: rgba(236,100,75,0.91)">
+            <img src="resources/images/tiles/raava.jpg">
+            <p class="eventName">Raava and Vaatu Seperate</p>
+            <p class="eventShortDescription">chaos is released into the world</p>
+            <p class="eventLongDescription">Two years after his banishment, Wan wanted to travel the world to find the
+                other lion turtle cities. During his journey, he was disturbed by a stampede of fleeing spirits, who ran
+                away from the raging fight between the "all-powerful spirits". He went to investigate, as the battle
+                risked wiping out the entire valley. Concerned about the destruction of the environment, Wan approached
+                the two raging spirits, oblivious to their identity, and ordered them to stop. The white spirit, Raava,
+                told him off, saying that the fight did not concern him. However, when he objected, telling her that it
+                was his concern when the lives of spirits and animals were at stake, the dark spirit, Vaatu, begged him
+                for help. Upon hearing that the dark entity had been tortured by his counterpart for ten thousand years,
+                Wan used his firebending to break the hold Raava had on Vaatu. It was only after Vaatu had already fled
+                that Wan learned the error of his actions, as Raava explained who she was and what her purpose was.</p>
+
+        </eventTile>
+        <img class="eventBackground" src="resources/images/backgrounds/2703.jpg">
+    </event>
+</events>
+
+<div id="timelineDiv">
+    <div id="timelineIndicator"></div>
+    <p id="timelineIndicatorText">Welcome</p>
+    <img src="resources/images/generic/timelinelines.png" id="timelineLines">
+</div>
+</body>
+
+<script>
+    window.onload = function () {
+        $("loading img").fadeOut(2000);
+        $("loading").fadeOut(3000);
+        $("#particles-js").fadeIn(10000);
+        $("#songServiceAndSacrifice").trigger('play');
+
+        //Particles
+        particlesJS.load('particles-js', 'resources/js/particles.json', function () {
+            console.log('particles.js started');
+        });
+
+        //Scrolling
+        $(function () {
+            $("body").mousewheel(function (event, delta) {
+                this.scrollLeft -= (delta * 50);
+                event.preventDefault();
+                updateDate();
+
+            });
+        });
+
+        function updateDate() {
+            var element = document.elementFromPoint(400, 0);
+            $("#timelineIndicatorText").text(element.getAttribute("data-date"));
+        }
+    };
+</script>
+
+<script src="resources/js/jquery.js"></script>
+<script src="resources/js/mouse.js"></script>
+<script src="resources/js/particles.js"></script>
+</html>
