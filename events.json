@@ -1,0 +1,20 @@
+[
+  {
+    "eventDate": "9,850 BG — Year of the Dragon",
+    "eventName": "Avatar Wan is Born",
+    "eventShort": "the first avatar was born",
+    "eventLong": "Living in poverty, Wan stole to survive and feed his friends. To achieve that goal, he regularly stole from the Chou family. However, one day, after snatching food from them, he       was chased down the streets of the city by the three angry Chou brothers. He managed to outrun them at       first by making his way across rooftops, though when he stopped to eat, the brothers caught up to him.       Wan attempted to escape again, but was tripped by one of the Chou brothers and subsequently captured.       His sack of food was taken away from him, and he was thrown into a muddy pen with hybrid pigs. Wan       returned to his family's tree house, bringing Jaya and Yao what little food he had managed to salvage in       his tunic. He gave away his own portion to several hungry animals, lamenting their impoverished       lifestyle and wishing they could live like the Chous. During that time, however, he devised a plan to       gain more power so he could change his life.",
+    "eventImage": "resources/images/tiles/wan.jpg",
+    "eventBackgroundImage": "resources/images/backgrounds/lionTurtle.jpg",
+    "eventColour": "rgba(21, 79, 125, 0.91)"
+  },
+  {
+    "eventDate": "9,830 BG — Year of the Rat",
+    "eventName": "Raava and Vaatu Seperate",
+    "eventShort": "chaos is released into the world",
+    "eventLong": "Two years after his banishment, Wan wanted to travel the world to find the other lion turtle cities. During his journey, he was disturbed by a stampede of fleeing spirits, who ran away from the raging fight between the 'all-powerful spirits'. He went to investigate, as the battle risked wiping out the entire valley. Concerned about the destruction of the environment, Wan approached the two raging spirits, oblivious to their identity, and ordered them to stop. The white spirit, Raava, told him off, saying that the fight did not concern him. However, when he objected, telling her that it was his concern when the lives of spirits and animals were at stake, the dark spirit, Vaatu, begged him for help. Upon hearing that the dark entity had been tortured by his counterpart for ten thousand years, Wan used his firebending to break the hold Raava had on Vaatu. It was only after Vaatu had already fled that Wan learned the error of his actions, as Raava explained who she was and what her purpose was.",
+    "eventImage": "resources/images/tiles/raava.jpg",
+    "eventBackgroundImage": "resources/images/backgrounds/2703.jpg",
+    "eventColour": "rgba(236, 100, 75, 0.91)"
+  }
+]

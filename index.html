@@ -79,6 +79,7 @@
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
+        overflow: hidden;
     }
 
     .eventBackground {
@@ -93,6 +94,7 @@
     eventTile img {
         float: left;
         height: 100%;
+        max-width: 50%;
     }
 
     eventTile .eventName {
@@ -159,47 +161,9 @@
 <body>
 <div id="particles-js"></div>
 <loading><img src="resources/images/generic/loading.png"></loading>
-<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>
+<!--<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>-->
 
 <events>
-    <event data-date="9,850 BG — Year of the Dragon">
-        <eventTile style="background-color: rgba(21, 79, 125, 0.91)">
-            <img src="resources/images/tiles/wan.jpg">
-            <p class="eventName">Avatar Wan is Born</p>
-            <p class="eventShortDescription">the first avatar was born</p>
-            <p class="eventLongDescription">Living in poverty, Wan stole to survive and feed his friends. To achieve
-                that goal, he regularly stole from the Chou family. However, one day, after snatching food from them, he
-                was chased down the streets of the city by the three angry Chou brothers. He managed to outrun them at
-                first by making his way across rooftops, though when he stopped to eat, the brothers caught up to him.
-                Wan attempted to escape again, but was tripped by one of the Chou brothers and subsequently captured.
-                His sack of food was taken away from him, and he was thrown into a muddy pen with hybrid pigs. Wan
-                returned to his family's tree house, bringing Jaya and Yao what little food he had managed to salvage in
-                his tunic. He gave away his own portion to several hungry animals, lamenting their impoverished
-                lifestyle and wishing they could live like the Chous. During that time, however, he devised a plan to
-                gain more power so he could change his life.</p>
-        </eventTile>
-        <img class="eventBackground" src="resources/images/backgrounds/lionTurtle.jpg">
-    </event>
-
-    <event data-date="9,830 BG — Year of the Rat">
-        <eventTile style="background-color: rgba(236,100,75,0.91)">
-            <img src="resources/images/tiles/raava.jpg">
-            <p class="eventName">Raava and Vaatu Seperate</p>
-            <p class="eventShortDescription">chaos is released into the world</p>
-            <p class="eventLongDescription">Two years after his banishment, Wan wanted to travel the world to find the
-                other lion turtle cities. During his journey, he was disturbed by a stampede of fleeing spirits, who ran
-                away from the raging fight between the "all-powerful spirits". He went to investigate, as the battle
-                risked wiping out the entire valley. Concerned about the destruction of the environment, Wan approached
-                the two raging spirits, oblivious to their identity, and ordered them to stop. The white spirit, Raava,
-                told him off, saying that the fight did not concern him. However, when he objected, telling her that it
-                was his concern when the lives of spirits and animals were at stake, the dark spirit, Vaatu, begged him
-                for help. Upon hearing that the dark entity had been tortured by his counterpart for ten thousand years,
-                Wan used his firebending to break the hold Raava had on Vaatu. It was only after Vaatu had already fled
-                that Wan learned the error of his actions, as Raava explained who she was and what her purpose was.</p>
-
-        </eventTile>
-        <img class="eventBackground" src="resources/images/backgrounds/2703.jpg">
-    </event>
 </events>
 
 <div id="timelineDiv">
@@ -217,9 +181,7 @@
         $("#songServiceAndSacrifice").trigger('play');
 
         //Particles
-        particlesJS.load('particles-js', 'resources/js/particles.json', function () {
-            console.log('particles.js started');
-        });
+        particlesJS.load('particles-js', 'resources/js/particles.json');
 
         //Scrolling
         $(function () {
@@ -231,11 +193,36 @@
             });
         });
 
-        function updateDate() {
-            var element = document.elementFromPoint(400, 0);
-            $("#timelineIndicatorText").text(element.getAttribute("data-date"));
-        }
+        addEvents();
     };
+
+    function updateDate() {
+        var element = document.elementFromPoint(400, 0);
+        $("#timelineIndicatorText").text(element.getAttribute("data-date"));
+    }
+
+    function addEvents () {
+        var events = $.getJSON("events.json", function (data) {
+            for (var i in data) {
+                var event = data[i];
+                $("events").append(makeEvent(event.eventDate, event.eventName, event.eventShort, event.eventLong, event.eventImage, event.eventBackgroundImage, event.eventColour));
+            }
+        });
+    }
+
+    function makeEvent(eventDate, eventName, eventShort, eventLong, eventImage, eventBackgroundImage, eventColour) {
+        var eventHtml = "";
+        eventHtml += "<event data-date=\" " + eventDate + "\">";
+        eventHtml += "  <eventTile style=\"background-color: " + eventColour + "\">";
+        eventHtml += "  <img src=\""+ eventImage +"\">";
+        eventHtml += "  <p class=\"eventName\">"+ eventName +"<\/p>";
+        eventHtml += "  <p class=\"eventShortDescription\">"+ eventShort +"<\/p>";
+        eventHtml += "  <p class=\"eventLongDescription\">"+ eventLong +"<\/p>";
+        eventHtml += "  <\/eventTile>";
+        eventHtml += "<img class=\"eventBackground\" src=\""+ eventBackgroundImage +"\">";
+        eventHtml += "<\/event>";
+        return eventHtml;
+    }
 </script>
 
 <script src="resources/js/jquery.js"></script>
