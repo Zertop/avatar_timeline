@@ -18,5 +18,7 @@
     </orderEntry>
     <orderEntry type="library" name="react" level="application" />
     <orderEntry type="library" name="react-dom" level="application" />
+    <orderEntry type="library" name="lazyload.transpiled" level="application" />
+    <orderEntry type="library" name="numeral" level="application" />
   </component>
 </module>

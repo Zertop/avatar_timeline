@@ -42,7 +42,8 @@
     }
 
     html {
-        overflow: scroll;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
         overflow-y: hidden;
     }
 
@@ -68,9 +69,23 @@
         position: relative;
         margin: 0;
         padding: 0;
+        min-width: 80%;
+        max-width: 90%;
+        flex: 0 0 auto;
+    }
+
+    .eventBackground {
+        height: 100vh;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        z-index: 0;
+        pointer-events: none;
+        object-fit: cover;
     }
 
     eventTile {
+        display: flex;
         position: absolute;
         z-index: 2;
         width: 70%;
@@ -82,43 +97,46 @@
         overflow: hidden;
     }
 
-    .eventBackground {
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        z-index: 0;
-        pointer-events: none;
-        filter: blur(0px);
-    }
-
-    eventTile img {
-        float: left;
+    eventImage {
+        flex: 1;
         height: 100%;
-        max-width: 50%;
+        max-width: 100%;
     }
 
-    eventTile .eventName {
+    eventImage img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+
+    eventInfo {
+        flex: 1;
+        margin-left: 4%;
+        margin-right: 4%;
+        margin-bottom: 4%;
+    }
+
+    eventInfo .eventName {
         font-family: Arial, serif;
         color: white;
         font-size: 2em;
-        padding-left: 54%;
     }
 
-    eventTile .eventShortDescription {
+    eventInfo .eventShortDescription {
         font-family: Arial, serif;
         color: white;
         font-size: 1.25em;
-        padding-left: 54%;
     }
 
-    eventTile .eventLongDescription {
+    eventInfo .eventLongDescription {
+        height: 60%;
         font-family: Arial, serif;
         color: white;
         font-size: 1em;
-        padding-left: 54%;
-        padding-right: 4%;
         text-align: justify;
-        text-justify: inter-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
     }
 
     #timelineIndicator {
@@ -164,6 +182,7 @@
 <!--<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>-->
 
 <events>
+    <!--Events Follow by JS Injection-->
 </events>
 
 <div id="timelineDiv">
@@ -174,58 +193,149 @@
 </body>
 
 <script>
+    /**
+     * Do actions on window load
+     */
     window.onload = function () {
-        $("loading img").fadeOut(2000);
-        $("loading").fadeOut(3000);
-        $("#particles-js").fadeIn(10000);
-        $("#songServiceAndSacrifice").trigger('play');
+        //Add All Events
+        addEvents();
 
         //Particles
         particlesJS.load('particles-js', 'resources/js/particles.json');
 
         //Scrolling
         $(function () {
+
             $("body").mousewheel(function (event, delta) {
+                if (delta < 0) {
+                    speed = 0;
+                } else {
+                    speed++;
+                }
+
                 this.scrollLeft -= (delta * 50);
                 event.preventDefault();
                 updateDate();
-
             });
         });
 
-        addEvents();
+        //Add Lazy Image Loading
+        $(function () {
+            $("img.lazy").lazyload({
+                threshold: 200
+            });
+        });
+
+        //Show Page
+        $("loading img").fadeOut(2000);
+        $("loading").fadeOut(3000);
+        $("#particles-js").fadeIn(10000);
+        $("#songServiceAndSacrifice").trigger('play');
     };
 
+    /**
+     * Update Date Element
+     */
     function updateDate() {
         var element = document.elementFromPoint(400, 0);
         $("#timelineIndicatorText").text(element.getAttribute("data-date"));
     }
 
-    function addEvents () {
-        var events = $.getJSON("events.json", function (data) {
+    /**
+     * Add all events from the events.json file
+     */
+    function addEvents() {
+        var events = $.getJSON("events_avatar.json", function (data) {
             for (var i in data) {
                 var event = data[i];
                 $("events").append(makeEvent(event.eventDate, event.eventName, event.eventShort, event.eventLong, event.eventImage, event.eventBackgroundImage, event.eventColour));
+                console.log("Added " + formatDate(event.eventDate) + " (" + event.eventName + ")");
             }
         });
     }
 
+    /**
+     * Make event HTML element from input variables
+     * @param eventDate
+     * @param eventName
+     * @param eventShort
+     * @param eventLong
+     * @param eventImage
+     * @param eventBackgroundImage
+     * @param eventColour
+     * @returns {string}
+     */
     function makeEvent(eventDate, eventName, eventShort, eventLong, eventImage, eventBackgroundImage, eventColour) {
         var eventHtml = "";
-        eventHtml += "<event data-date=\" " + eventDate + "\">";
+        eventHtml += "<event data-date=\" " + formatDate(eventDate) + "\">";
         eventHtml += "  <eventTile style=\"background-color: " + eventColour + "\">";
-        eventHtml += "  <img src=\""+ eventImage +"\">";
-        eventHtml += "  <p class=\"eventName\">"+ eventName +"<\/p>";
-        eventHtml += "  <p class=\"eventShortDescription\">"+ eventShort +"<\/p>";
-        eventHtml += "  <p class=\"eventLongDescription\">"+ eventLong +"<\/p>";
+        eventHtml += "      <eventImage>";
+        eventHtml += "          <img class=\"eventImage lazy\" alt='There appears to be an error.' data-original=\"" + eventImage + "\">";
+        eventHtml += "      <\/eventImage>";
+        eventHtml += "      <eventInfo>";
+        eventHtml += "          <p class=\"eventName\">" + eventName + "<\/p>";
+        eventHtml += "          <p class=\"eventShortDescription\">" + eventShort + "<\/p>";
+        eventHtml += "          <p class=\"eventLongDescription\">" + eventLong + "<\/p>";
+        eventHtml += "      <\/eventInfo>";
         eventHtml += "  <\/eventTile>";
-        eventHtml += "<img class=\"eventBackground\" src=\""+ eventBackgroundImage +"\">";
+        eventHtml += "<img class=\"eventBackground lazy\" data-original=\"" + eventBackgroundImage + "\">";
         eventHtml += "<\/event>";
         return eventHtml;
     }
+
+    /**
+     * Format date to the corresponding format
+     * @param year
+     * @returns {string}
+     */
+    function formatDate(year) {
+        if (parseInt(year) < 0) {
+            year = numeral(Math.abs(year)).format('0,0');
+            return year + " BG";
+        } else {
+            year = numeral(Math.abs(year)).format('0,0');
+            return year + " AG";
+        }
+    }
+
+    function uploadFiles() {
+        $.ajax({
+            // Your server script to process the upload
+            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
+            type: 'POST',
+
+            // Form data
+            data: new FormData($('form')[0]),
+
+            // Tell jQuery not to process data or worry about content-type
+            // You *must* include these options!
+            cache: false,
+            contentType: false,
+            processData: false,
+
+            // Custom XMLHttpRequest
+            xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    // For handling the progress of the upload
+                    myXhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            $('progress').attr({
+                                value: e.loaded,
+                                max: e.total,
+                            });
+                        }
+                    } , false);
+                }
+                return myXhr;
+            },
+        });
+    }
 </script>
 
+<script src="resources/js/numeral.min.js"></script>
 <script src="resources/js/jquery.js"></script>
+<script src="resources/js/lazyload.js"></script>
 <script src="resources/js/mouse.js"></script>
 <script src="resources/js/particles.js"></script>
 </html>

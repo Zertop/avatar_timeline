@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Avatar: A Timeline: Builder</title>
+</head>
+<style>
+    loading {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 1000;
+        background-color: #04263E;
+    }
+
+    loading img {
+        position: absolute;
+        max-height: 100px;
+        z-index: 0;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        animation: spinclock 20s infinite;
+    }
+
+    @keyframes spinclock {
+        0% {
+            transform: translateX(-50%) translateY(-50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translateX(-50%) translateY(-50%) rotate(360deg);
+        }
+    }
+
+    body {
+        background-color: #5c5c5c;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+
+    html {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        overflow-y: hidden;
+    }
+
+    ::-webkit-scrollbar {
+        width: 0px;
+        height: 10px;
+        background: #808080;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #5c5c5c;
+    }
+
+    events {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translateZ(0) scale(1.0, 1.0);
+    }
+
+    event {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        min-width: 100%;
+        max-width: 100%;
+        flex: 0 0 auto;
+    }
+
+    .eventBackground {
+        height: 100vh;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        z-index: 0;
+        object-fit: cover;
+    }
+
+    eventTile {
+        position: absolute;
+        z-index: 2;
+        width: 60%;
+        height: 50%;
+        background-color: rgba(0, 0, 0, 0.50);
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        overflow: hidden;
+    }
+
+    eventTile img {
+        float: left;
+        height: 100%;
+        max-width: 50%;
+    }
+
+    eventTile .eventName {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 2em;
+        margin-left: 54%;
+        margin-right: 4%;
+    }
+
+    eventTile .eventShortDescription {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 1.25em;
+        margin-left: 54%;
+        margin-right: 4%;
+    }
+
+    eventTile .eventLongDescription {
+        font-family: Arial, serif;
+        color: white;
+        font-size: 1em;
+        margin-left: 54%;
+        margin-right: 4%;
+        text-align: justify;
+        text-justify: inter-word;
+        min-height: 50%;
+    }
+
+    #timelineIndicator {
+        background-color: grey;
+        height: 50px;
+        width: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 10px;
+        z-index: 100;
+    }
+
+    #timelineIndicatorText {
+        position: fixed;
+        font-family: Arial, sans-serif;
+        color: grey;
+        bottom: 16px;
+        left: 25px;
+        font-size: 1.6em;
+        margin-bottom: 0;
+        z-index: 100;
+    }
+
+    #particles-js {
+        display: none;
+        pointer-events: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    #timelineLines {
+        position: fixed;
+        bottom: 0px;
+        left: 0;
+    }
+
+    #saveButton {
+        position: absolute;
+        bottom: 40px;
+        right: 20px;
+        background-color: #154f7d;
+    }
+
+    #saveButton button {
+        border: none;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        color: white;
+        font-size: 1.5em;
+        background-color: inherit;
+    }
+
+    progress {
+        position: absolute;
+        bottom: 0;
+        width: 100vw;
+    }
+
+</style>
+<body>
+<loading><img src="resources/images/generic/loading.png"></loading>
+
+<events>
+    <event data-date="0">
+        <eventTile style="background-color: rgba(21, 79, 125, 0.90)">
+            <img onclick="changeEventImage()" class="eventImage" contenteditable='true'
+                 src="resources/images/tiles/wan.jpg">
+            <p contenteditable='true' class="eventName">Event Name Here</p>
+            <p contenteditable='true' class="eventShortDescription">event short description here</p>
+            <p contenteditable='true' class="eventLongDescription">Event long description here...</p>
+        </eventTile>
+        <img onclick="changeBackgroundImage()" class="eventBackground lazy"
+             src="resources/images/backgrounds/lionTurtle.jpg">
+    </event>
+</events>
+
+<form id="backgroundImageUpload">
+    <input id="backgroundImageSelect" type="file" name="file_upload"/>
+</form>
+
+<form id="eventImageUpload">
+    <input id="eventImageSelect" type="file" name="file_upload"/>
+</form>
+
+<div id="saveButton">
+    <button onclick="submit()">Save</button>
+</div>
+
+<progress></progress>
+</body>
+
+<script>
+    window.onload = function () {
+        $("loading img").fadeOut(2000);
+        $("loading").fadeOut(3000);
+    };
+
+    function changeBackgroundImage() {
+        var element = document.getElementById("backgroundImageSelect");
+        element.click();
+
+        element.onchange = function () {
+            var file = element.files[0];
+            changeImageTo(document.getElementsByClassName("eventBackground")[0], file);
+        };
+    }
+
+    function changeEventImage() {
+        var element = document.getElementById("eventImageSelect");
+        element.click();
+
+        element.onchange = function () {
+            var file = element.files[0];
+            changeImageTo(document.getElementsByClassName("eventImage")[0], file);
+        };
+    }
+
+    function submit() {
+        $.ajax({
+            // Your server script to process the upload
+            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
+            type: 'POST',
+
+            // Form data
+            data: new FormData($('#backgroundImageUpload')[0]),
+
+            //Options
+            cache: false,
+            contentType: false,
+            processData: false,
+
+            // XMLHttpRequest
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+
+                    // For handling the progress of the upload
+                    myXhr.upload.addEventListener('progress', function (e) {
+                        if (e.lengthComputable) {
+                            $('progress').attr({
+                                value: e.loaded,
+                                max: e.total,
+                            });
+                        }
+                    }, false);
+                }
+                return myXhr;
+            },
+        });
+
+        $.ajax({
+            // Your server script to process the upload
+            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
+            type: 'POST',
+
+            // Form data
+            data: new FormData($('#eventImageUpload')[0]),
+
+            // Tell jQuery not to process data or worry about content-type
+            // You *must* include these options!
+            cache: false,
+            contentType: false,
+            processData: false,
+
+            // Custom XMLHttpRequest
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    // For handling the progress of the upload
+                    myXhr.upload.addEventListener('progress', function (e) {
+                        if (e.lengthComputable) {
+                            $('progress').attr({
+                                value: e.loaded,
+                                max: e.total,
+                            });
+                        }
+                    }, false);
+                }
+                return myXhr;
+            },
+        });
+
+        makeJSONAddition();
+    }
+
+    function makeJSONAddition() {
+        var jsonOut = {
+            "eventDate": $("#timelineIndicatorText").text(),
+            "eventName": $(".eventName").text(),
+            "eventShort": $(".eventShortDescription").text(),
+            "eventLong": $(".eventLongDescription").text(),
+            "eventImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/" + document.getElementById("eventImageSelect").files.item(0).name,
+            "eventBackgroundImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/" + document.getElementById("backgroundImageSelect").files.item(0).name,
+            "eventColour": $("eventTile")[0].style.getPropertyValue("background-color"),
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                console.log(xhr.responseText);
+            }
+        };
+
+        xhr.open("POST", "https://cdn.rhyswilliams.co.za/avatar_timeline/add_to_json.php", true);
+        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        xhr.send(JSON.stringify(jsonOut));
+    }
+
+    function changeImageTo(element, file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            element.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+
+<script src="resources/js/numeral.min.js"></script>
+<script src="resources/js/jquery.js"></script>
+<script src="resources/js/lazyload.js"></script>
+<script src="resources/js/mouse.js"></script>
+<script src="resources/js/particles.js"></script>
+</html>

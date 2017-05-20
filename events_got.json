@@ -1,12 +1,12 @@
 [
   {
-    "eventDate": "9,850 BG — Year of the Dragon",
-    "eventName": "Avatar Wan is Born",
-    "eventShort": "the first avatar was born",
-    "eventLong": "Living in poverty, Wan stole to survive and feed his friends. To achieve that goal, he regularly stole from the Chou family. However, one day, after snatching food from them, he       was chased down the streets of the city by the three angry Chou brothers. He managed to outrun them at       first by making his way across rooftops, though when he stopped to eat, the brothers caught up to him.       Wan attempted to escape again, but was tripped by one of the Chou brothers and subsequently captured.       His sack of food was taken away from him, and he was thrown into a muddy pen with hybrid pigs. Wan       returned to his family's tree house, bringing Jaya and Yao what little food he had managed to salvage in       his tunic. He gave away his own portion to several hungry animals, lamenting their impoverished       lifestyle and wishing they could live like the Chous. During that time, however, he devised a plan to       gain more power so he could change his life.",
-    "eventImage": "resources/images/tiles/wan.jpg",
-    "eventBackgroundImage": "resources/images/backgrounds/lionTurtle.jpg",
-    "eventColour": "rgba(21, 79, 125, 0.91)"
+    "eventDate": "8,000 BAL",
+    "eventName": "The Long Night",
+    "eventShort": "War for the Dawn",
+    "eventLong": "\"Thousands of years ago, there came a night that lasted a generation. Kings froze to death in their castles, same as the shepherds in their huts; and women smothered their babies rather than see them starve, and wept, and felt the tears freeze on their cheeks... In that darkness the White Walkers came for the first time. They swept through cities and kingdoms, riding their dead horses, hunting with their packs of pale spiders big as hounds.\" - Old Nan to Bran Stark",
+    "eventImage": "https://hdwallsbox.com/wallpapers/l/1920x1080/72/fantasy-art-artwork-game-of-thrones-white-walkers-1920x1080-71661.jpg",
+    "eventBackgroundImage": "http://sm.ign.com/ign_za/news/g/game-of-thrones-ascent-launches-long-night-expansi/game-of-thrones-ascent-launches-long-night-expansi_qzfz.jpg",
+    "eventColour": "rgba(30, 30, 30, 0.91)"
   },
   {
     "eventDate": "9,830 BG — Year of the Rat",
