@@ -6,7 +6,6 @@
 </head>
 <style>
     loading {
-        display: none;
         position: absolute;
         top: 0;
         left: 0;
@@ -206,12 +205,18 @@
     </event>
 </events>
 
+<div id="timelineDiv">
+    <div id="timelineIndicator"></div>
+    <p contenteditable='true' id="timelineIndicatorText">PLACE DATE HERE (NEGATIVE FOR BG)</p>
+    <img src="resources/images/generic/timelinelines.png" id="timelineLines">
+</div>
+
 <form id="backgroundImageUpload">
-    <input id="backgroundImageSelect" type="file" name="file_upload"/>
+    <input id="backgroundImageSelect" type="file" name="file_upload" accept="image/x-png,image/jpeg"/>
 </form>
 
 <form id="eventImageUpload">
-    <input id="eventImageSelect" type="file" name="file_upload"/>
+    <input id="eventImageSelect" type="file" name="file_upload" accept="image/x-png,image/jpeg"/>
 </form>
 
 <div id="saveButton">
@@ -248,94 +253,86 @@
     }
 
     function submit() {
-        $.ajax({
-            // Your server script to process the upload
-            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
-            type: 'POST',
 
-            // Form data
-            data: new FormData($('#backgroundImageUpload')[0]),
+        //Progress Bar
+        $('progress').attr({max: 2});
 
-            //Options
-            cache: false,
-            contentType: false,
-            processData: false,
+        var backgroundImageXHR = uploadBackgroundImage ();
 
-            // XMLHttpRequest
-            xhr: function () {
-                var myXhr = $.ajaxSettings.xhr();
-                if (myXhr.upload) {
+        var eventImageXHR = uploadEventImage ();
 
-                    // For handling the progress of the upload
-                    myXhr.upload.addEventListener('progress', function (e) {
-                        if (e.lengthComputable) {
-                            $('progress').attr({
-                                value: e.loaded,
-                                max: e.total,
-                            });
-                        }
-                    }, false);
+        var interval = setInterval(function () {
+            if (backgroundImageXHR.readyState == XMLHttpRequest.DONE){
+                $('progress').attr({value: 1});
+                if (eventImageXHR.readyState == XMLHttpRequest.DONE) {
+                    $('progress').attr({value: 2});
+                    uploadJSON(eventImageXHR.responseText, backgroundImageXHR.responseText);
+                    clearInterval(interval);
                 }
-                return myXhr;
-            },
-        });
-
-        $.ajax({
-            // Your server script to process the upload
-            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
-            type: 'POST',
-
-            // Form data
-            data: new FormData($('#eventImageUpload')[0]),
-
-            // Tell jQuery not to process data or worry about content-type
-            // You *must* include these options!
-            cache: false,
-            contentType: false,
-            processData: false,
-
-            // Custom XMLHttpRequest
-            xhr: function () {
-                var myXhr = $.ajaxSettings.xhr();
-                if (myXhr.upload) {
-                    // For handling the progress of the upload
-                    myXhr.upload.addEventListener('progress', function (e) {
-                        if (e.lengthComputable) {
-                            $('progress').attr({
-                                value: e.loaded,
-                                max: e.total,
-                            });
-                        }
-                    }, false);
-                }
-                return myXhr;
-            },
-        });
-
-        makeJSONAddition();
+            }
+        },1000);
     }
 
-    function makeJSONAddition() {
+    function uploadBackgroundImage () {
+        //Upload Background Image
+        var backgroundData = new FormData();
+        var backgroundDataFile = document.getElementById("backgroundImageSelect").files[0];
+        backgroundData.append("file_upload", backgroundDataFile);
+
+        var backgroundImageXHR = new XMLHttpRequest();
+        backgroundImageXHR.onreadystatechange = function () {
+            if (backgroundImageXHR.readyState == XMLHttpRequest.DONE) {
+                console.log(backgroundImageXHR.responseText);
+            }
+        };
+        backgroundImageXHR.open("POST", "https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php", true);
+        backgroundImageXHR.send(backgroundData);
+        return backgroundImageXHR;
+    }
+
+    function uploadEventImage () {
+        //Upload Event Image
+        var eventData = new FormData();
+        var eventDataFile = document.getElementById("eventImageSelect").files[0];
+        eventData.append("file_upload", eventDataFile);
+
+        var eventImageXHR = new XMLHttpRequest();
+        eventImageXHR.onreadystatechange = function () {
+            if (eventImageXHR.readyState == XMLHttpRequest.DONE) {
+                console.log(eventImageXHR.responseText);
+            }
+        };
+        eventImageXHR.open("POST", "https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php", true);
+        eventImageXHR.send(eventData);
+        return eventImageXHR;
+    }
+
+    function uploadJSON (eventImageName, backgroundImageName) {
+        //Upload JSON Data
+        var jsonXHR = new XMLHttpRequest();
+        jsonXHR.onreadystatechange = function () {
+            if (jsonXHR.readyState == XMLHttpRequest.DONE) {
+                console.log(jsonXHR.responseText);
+                alert("DONE");
+                window.location.reload(false);
+            }
+        };
+        jsonXHR.open("POST", "https://cdn.rhyswilliams.co.za/avatar_timeline/add_to_json.php", true);
+        jsonXHR.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        jsonXHR.send("json_string=" + makeJSONAddition(eventImageName, backgroundImageName));
+    }
+
+    function makeJSONAddition(eventImageName, backgroundImageName) {
         var jsonOut = {
             "eventDate": $("#timelineIndicatorText").text(),
             "eventName": $(".eventName").text(),
             "eventShort": $(".eventShortDescription").text(),
             "eventLong": $(".eventLongDescription").text(),
-            "eventImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/" + document.getElementById("eventImageSelect").files.item(0).name,
-            "eventBackgroundImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/" + document.getElementById("backgroundImageSelect").files.item(0).name,
+            "eventImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/images/" + eventImageName,
+            "eventBackgroundImage": "https://cdn.rhyswilliams.co.za/avatar_timeline/images/" + backgroundImageName,
             "eventColour": $("eventTile")[0].style.getPropertyValue("background-color"),
         };
-
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                console.log(xhr.responseText);
-            }
-        };
-
-        xhr.open("POST", "https://cdn.rhyswilliams.co.za/avatar_timeline/add_to_json.php", true);
-        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-        xhr.send(JSON.stringify(jsonOut));
+        return JSON.stringify(jsonOut);
     }
 
     function changeImageTo(element, file) {
