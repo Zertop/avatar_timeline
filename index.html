@@ -62,7 +62,7 @@
         flex-direction: row;
         flex-wrap: nowrap;
         -webkit-backface-visibility: hidden;
-        -webkit-transform: translateZ(0) scale(1.0, 1.0);
+        /*-webkit-transform: translateZ(0) scale(1.0, 1.0);*/
     }
 
     event {
@@ -93,7 +93,7 @@
         background-color: rgba(0, 0, 0, 0.50);
         top: 50%;
         left: 50%;
-        transform: translateX(-50%) translateY(-50%);
+        transform: translate(-50%, -50%);
         overflow: hidden;
     }
 
@@ -179,7 +179,7 @@
 <body>
 <div id="particles-js"></div>
 <loading><img src="resources/images/generic/loading.png"></loading>
-<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>
+<!--<audio id="songServiceAndSacrifice" src="resources/music/service_and_sacrifice_compress.mp3"></audio>-->
 
 <events>
     <!--Events Follow by JS Injection-->
@@ -197,142 +197,12 @@
      * Do actions on window load
      */
     window.onload = function () {
-        //Add All Events
-        addEvents();
-
-        //Particles
-        particlesJS.load('particles-js', 'resources/js/particles.json');
-
-        //Scrolling
-        $(function () {
-
-            $("body").mousewheel(function (event, delta) {
-                if (delta < 0) {
-                    speed = 0;
-                } else {
-                    speed++;
-                }
-
-                this.scrollLeft -= (delta * 50);
-                event.preventDefault();
-                updateDate();
-            });
-        });
-
-        //Add Lazy Image Loading
-        $(function () {
-            $("img.lazy").lazyload({
-                threshold: 200
-            });
-        });
-
-        //Show Page
-        $("loading img").fadeOut(2000);
-        $("loading").fadeOut(3000);
-        $("#particles-js").fadeIn(10000);
-        $("#songServiceAndSacrifice").trigger('play');
+        loadSite();
     };
-
-    /**
-     * Update Date Element
-     */
-    function updateDate() {
-        var element = document.elementFromPoint(400, 0);
-        $("#timelineIndicatorText").text(element.getAttribute("data-date"));
-    }
-
-    /**
-     * Add all events from the events.json file
-     */
-    function addEvents() {
-        var events = $.getJSON("events_avatar.json", function (data) {
-            for (var i in data) {
-                var event = data[i];
-                $("events").append(makeEvent(event.eventDate, event.eventName, event.eventShort, event.eventLong, event.eventImage, event.eventBackgroundImage, event.eventColour));
-                console.log("Added " + formatDate(event.eventDate) + " (" + event.eventName + ")");
-            }
-        });
-    }
-
-    /**
-     * Make event HTML element from input variables
-     * @param eventDate
-     * @param eventName
-     * @param eventShort
-     * @param eventLong
-     * @param eventImage
-     * @param eventBackgroundImage
-     * @param eventColour
-     * @returns {string}
-     */
-    function makeEvent(eventDate, eventName, eventShort, eventLong, eventImage, eventBackgroundImage, eventColour) {
-        var eventHtml = "";
-        eventHtml += "<event data-date=\" " + formatDate(eventDate) + "\">";
-        eventHtml += "  <eventTile style=\"background-color: " + eventColour + "\">";
-        eventHtml += "      <eventImage>";
-        eventHtml += "          <img class=\"eventImage lazy\" alt='There appears to be an error.' data-original=\"" + eventImage + "\">";
-        eventHtml += "      <\/eventImage>";
-        eventHtml += "      <eventInfo>";
-        eventHtml += "          <p class=\"eventName\">" + eventName + "<\/p>";
-        eventHtml += "          <p class=\"eventShortDescription\">" + eventShort + "<\/p>";
-        eventHtml += "          <p class=\"eventLongDescription\">" + eventLong + "<\/p>";
-        eventHtml += "      <\/eventInfo>";
-        eventHtml += "  <\/eventTile>";
-        eventHtml += "<img class=\"eventBackground lazy\" data-original=\"" + eventBackgroundImage + "\">";
-        eventHtml += "<\/event>";
-        return eventHtml;
-    }
-
-    /**
-     * Format date to the corresponding format
-     * @param year
-     * @returns {string}
-     */
-    function formatDate(year) {
-        if (parseInt(year) < 0) {
-            year = numeral(Math.abs(year)).format('0,0');
-            return year + " BG";
-        } else {
-            year = numeral(Math.abs(year)).format('0,0');
-            return year + " AG";
-        }
-    }
-
-    function uploadFiles() {
-        $.ajax({
-            // Your server script to process the upload
-            url: 'https://cdn.rhyswilliams.co.za/avatar_timeline/upload.php',
-            type: 'POST',
-
-            // Form data
-            data: new FormData($('form')[0]),
-
-            // Tell jQuery not to process data or worry about content-type
-            // You *must* include these options!
-            cache: false,
-            contentType: false,
-            processData: false,
-
-            // Custom XMLHttpRequest
-            xhr: function() {
-                var myXhr = $.ajaxSettings.xhr();
-                if (myXhr.upload) {
-                    // For handling the progress of the upload
-                    myXhr.upload.addEventListener('progress', function(e) {
-                        if (e.lengthComputable) {
-                            $('progress').attr({
-                                value: e.loaded,
-                                max: e.total,
-                            });
-                        }
-                    } , false);
-                }
-                return myXhr;
-            },
-        });
-    }
 </script>
 
+<script src="app/app.js"></script>
+<script src="resources/js/rainyday.js"></script>
 <script src="resources/js/numeral.min.js"></script>
 <script src="resources/js/jquery.js"></script>
 <script src="resources/js/lazyload.js"></script>
